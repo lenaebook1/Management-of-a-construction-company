@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Объект 360 — управление стройкой</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+
+  <!-- Боковая панель с навигацией -->
+  <aside class="sidebar">
+    <div class="brand">◈ ОБЪЕКТ<span>360</span></div>
+    <p class="muted">ПАНЕЛЬ ПРОРАБА</p>
+    <nav>
+      <a href="#overview">▦ Обзор</a>
+      <a href="#tasks">☑ Задачи</a>
+      <a href="#materials">▤ Материалы</a>
+      <a href="#finance">₽ Финансы</a>
+    </nav>
+    <div class="sidebar-note">Учебная система управления строительным объектом</div>
+  </aside>
+
+  <main>
+    <!-- Шапка с датой -->
+    <header class="top">
+      <div>
+        <span class="eyebrow">УПРАВЛЕНИЕ ПРОЕКТОМ</span>
+        <h1>Жилой комплекс «Северный»</h1>
+        <p class="sub">Контроль задач, материалов и бюджета в одном месте</p>
+      </div>
+      <div class="date-pill" id="today"></div>
+    </header>
+
+    <!-- Баннер -->
+    <section class="hero">
+      <div>
+        <span class="eyebrow">ОБЪЕКТ № 07 / В РАБОТЕ</span>
+        <h2>Стройка под контролем</h2>
+        <p>Отмечайте выполненные работы, планируйте закупки и следите за расходами.</p>
+      </div>
+      <div class="hero-graphic">▥<span>360°</span></div>
+    </section>
+
+    <!-- Блок статистики -->
+    <section id="overview" class="stats">
+      <article class="stat">
+        <span>Всего задач</span><strong id="statTotal">0</strong><small>В проекте</small>
+      </article>
+      <article class="stat">
+        <span>Выполнено</span><strong id="statDone">0</strong><small>Завершённые работы</small>
+      </article>
+      <article class="stat">
+        <span>Расходы</span><strong id="statSpent">0 ₽</strong><small>Закупки и затраты</small>
+      </article>
+      <article class="stat">
+        <span>Остаток бюджета</span><strong id="statLeft">0 ₽</strong><small>Доступные средства</small>
+      </article>
+    </section>
+
+    <div class="columns">
+
+      <!-- Панель задач -->
+      <section id="tasks" class="panel">
+        <div class="panel-head">
+          <div>
+            <span class="eyebrow">ПЛАН РАБОТ</span>
+            <h3>Задачи бригады</h3>
+          </div>
+          <select id="taskFilter">
+            <option value="all">Все задачи</option>
+            <option value="active">В работе</option>
+            <option value="done">Выполненные</option>
+            <option value="high">Срочные</option>
+          </select>
+        </div>
+
+        <form id="taskForm" class="form-grid">
+          <label class="wide">Название работы
+            <input id="taskName" placeholder="Например, монтаж перегородок" maxlength="70" required>
+          </label>
+          <label>Исполнитель
+            <input id="taskWorker" placeholder="Бригада № 2" maxlength="40" required>
+          </label>
+          <label>Приоритет
+            <select id="taskPriority">
+              <option value="normal">Обычный</option>
+              <option value="high">Срочный</option>
+            </select>
+          </label>
+          <button class="primary wide">+ Добавить задачу</button>
+        </form>
+
+        <div class="progress-caption">
+          <span>Готовность объекта</span><b id="progressText">0%</b>
+        </div>
+        <div class="progress"><div id="progressBar"></div></div>
+        <div id="taskList" class="task-list"></div>
+      </section>
+
+      <!-- Панель материалов -->
+      <section id="materials" class="panel">
+        <div class="panel-head">
+          <div>
+            <span class="eyebrow">СКЛАД И СНАБЖЕНИЕ</span>
+            <h3>Закупки материалов</h3>
+          </div>
+        </div>
+
+        <form id="materialForm" class="form-grid">
+          <label class="wide">Материал
+            <input id="materialName" placeholder="Например, цемент М500" maxlength="70" required>
+          </label>
+          <label>Количество
+            <input id="materialQty" type="number" min="0.01" step="0.01" placeholder="25" required>
+          </label>
+          <label>Цена за единицу, ₽
+            <input id="materialPrice" type="number" min="0" step="0.01" placeholder="480" required>
+          </label>
+          <button class="primary wide">+ Добавить закупку</button>
+        </form>
+
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr><th>Материал</th><th>Кол-во</th><th>Сумма</th><th></th></tr>
+            </thead>
+            <tbody id="materialRows"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <!-- Панель бюджета -->
+    <section id="finance" class="panel finance">
+      <div>
+        <span class="eyebrow">ФИНАНСОВЫЙ КОНТРОЛЬ</span>
+        <h3>Бюджет объекта</h3>
+        <p class="sub">Укажите лимит и следите за расходами на закупки.</p>
+        <form id="budgetForm" class="budget-form">
+          <label>Плановый бюджет, ₽
+            <input id="budgetInput" type="number" min="1" step="1" required>
+          </label>
+          <button class="primary">Сохранить бюджет</button>
+        </form>
+        <div class="budget-track"><div id="budgetBar"></div></div>
+        <p id="budgetStatus" class="budget-status"></p>
+      </div>
+
+      <div class="summary">
+        <span>ИТОГО ЗАКУПОК</span><strong id="totalCost">0 ₽</strong>
+        <span>ПОЗИЦИЙ В СМЕТЕ</span><strong id="materialCount">0</strong>
+        <button id="exportBtn" class="outline">Скачать отчёт CSV</button>
+        <button id="resetBtn" class="danger">Очистить проект</button>
+      </div>
+    </section>
+
+    <footer>ОБЪЕКТ 360 · Учебный проект · JavaScript</footer>
+  </main>
+</div>
+
+<!-- Всплывающее уведомление -->
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script src="app.js"></script>
+</body>
+</html>
